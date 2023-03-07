@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">projetoFinalKotlin</string>
+    <string name="registro_com_google">Registro com Google</string>
+    <string name="login_com_google">Login com Google</string>
+</resources>

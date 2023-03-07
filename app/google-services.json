@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "289342452773",
+    "project_id": "projeto-kotlin-final",
+    "storage_bucket": "projeto-kotlin-final.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289342452773:android:ca79ff79d78e4653dcbbcc",
+        "android_client_info": {
+          "package_name": "com.benincaza.projetofinalkotlin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289342452773-ebil36mviihit23gsgfo8ajuf8o78bca.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCgl27IIozp3QBkmwIen09qCgFB_rfn904"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289342452773-ebil36mviihit23gsgfo8ajuf8o78bca.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
