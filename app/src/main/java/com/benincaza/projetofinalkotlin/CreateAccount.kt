@@ -9,32 +9,29 @@ import android.widget.Toast
 
 class CreateAccount : AppCompatActivity() {
 
-    lateinit var etEmail: EditText
-    lateinit var etPassword: EditText
-    lateinit var etConfirmPassword: EditText
+    lateinit var edtEmail: EditText
+    lateinit var edtPassword: EditText
+    lateinit var edtConfirmPassword: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_create_account)
         supportActionBar?.hide()
 
-        etEmail = findViewById<EditText>(R.id.etEmail)
-        etPassword = findViewById<EditText>(R.id.etPassword)
-        etConfirmPassword = findViewById<EditText>(R.id.etConfirmPassword)
+        edtEmail = findViewById<EditText>(R.id.edt_email)
+        edtPassword = findViewById<EditText>(R.id.edt_password)
+        edtConfirmPassword = findViewById<EditText>(R.id.edt_confirm_password)
 
-        findViewById<View>(R.id.loginView).setOnClickListener{
+        findViewById<View>(R.id.txt_login_view).setOnClickListener{
             val activity = Intent(this, LoginScreen::class.java);
             startActivity(activity);
         }
 
-        findViewById<View>(R.id.Signin).setOnClickListener {
+        findViewById<View>(R.id.btn_signin).setOnClickListener {
             Toast.makeText(this, R.string.registro_com_google, Toast.LENGTH_SHORT).show()
         }
 
-        findViewById<View>(R.id.btnCreateAccount).setOnClickListener {
-            println(etEmail.text.toString().trim())
-            println(etPassword.text.toString().trim())
-            println(etConfirmPassword.text.toString().trim())
+        findViewById<View>(R.id.btn_create_account).setOnClickListener {
             Toast.makeText(this, "Registrando normal", Toast.LENGTH_SHORT).show()
         }
     }

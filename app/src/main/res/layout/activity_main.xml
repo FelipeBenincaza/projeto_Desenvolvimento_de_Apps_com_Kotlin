@@ -58,19 +58,19 @@
             android:layout_below="@+id/createTask"
             android:padding="10dp">
             <Button
-                android:id="@+id/add"
+                android:id="@+id/btn_add"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Adicionar"
                 android:layout_weight="1"/>
             <Button
-                android:id="@+id/delete"
+                android:id="@+id/btn_delete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Deletar"
                 android:layout_weight="1" />
             <Button
-                android:id="@+id/clear"
+                android:id="@+id/btn_clear"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Limpar"
