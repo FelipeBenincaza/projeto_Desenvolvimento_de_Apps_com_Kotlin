@@ -10,6 +10,11 @@ import android.view.View
 import android.widget.ArrayAdapter
 import android.widget.EditText
 import android.widget.ListView
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.auth.FirebaseUser
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
@@ -18,11 +23,27 @@ class MainActivity : AppCompatActivity() {
     private lateinit var sharedPreferences: SharedPreferences
     private var gson = Gson()
     private val NAME_LIST = "lista_de_compras"
+    lateinit var mGoogleSignClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
         supportActionBar?.hide()
+
+        val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+            .requestIdToken(getString(R.string.default_web_client_id))
+            .requestEmail()
+            .build();
+        mGoogleSignClient = GoogleSignIn.getClient(this, gso)
+
+        val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
+
+        val firebaseUser: FirebaseUser? = firebaseAuth.currentUser
+
+        if(firebaseUser == null){
+            val intent = Intent(this, LoginScreen::class.java)
+            startActivity(intent)
+        }
 
         sharedPreferences = getSharedPreferences(NAME_LIST, Context.MODE_PRIVATE)
 
@@ -63,6 +84,9 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<View>(R.id.logout).setOnClickListener{
+            firebaseAuth.signOut()
+            mGoogleSignClient.signOut()
+
             startActivity(Intent(this, LoginScreen::class.java))
         }
     }
