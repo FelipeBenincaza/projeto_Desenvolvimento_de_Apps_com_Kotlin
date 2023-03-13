@@ -82,13 +82,13 @@ class CreateAccount : AppCompatActivity() {
     private fun handleResult(completedTask: Task<GoogleSignInAccount>){
         try{
             val account: GoogleSignInAccount? = completedTask.getResult(ApiException::class.java);
-            Toast.makeText(this, "Logado com sucesso", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show();
             if(account != null){
                 UpdateUser(account)
             }
         }catch (e: ApiException){
             println(e)
-            Toast.makeText(this, "Falha ao logar", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.login_failed, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -103,59 +103,43 @@ class CreateAccount : AppCompatActivity() {
         }
     }
 
-    private fun notEmpty(): Boolean = edtPassword.text.toString().trim().isNotEmpty() &&
-            edtEmail.text.toString().trim().isNotEmpty() &&
-            edtConfirmPassword.text.toString().trim().isNotEmpty()
+    private fun verifyFields(): String{
+        if (edtPassword.text.toString().trim().isEmpty() && edtEmail.text.toString().trim().isEmpty() && edtConfirmPassword.text.toString().trim().isEmpty())
+            return getString(R.string.fill_all_fields)
 
-    private fun verifyIdenticalPassword(): Boolean{
-        var identical = false;
-        if(edtPassword.text.toString().trim() == edtConfirmPassword.text.toString().trim()){
-            identical = true;
-        }
+        if(edtPassword.text.toString().trim() != edtConfirmPassword.text.toString().trim())
+            return getString(R.string.passwords_not_match)
 
-        return identical;
+        if(edtPassword.text.toString().trim().length < 6)
+            return getString(R.string.password_inadequate_length)
+
+        return ""
     }
 
-    private fun verifySizePassword(): Boolean{
-        var correct = false
-        if(edtPassword.text.toString().trim().length >= 6) {
-            correct = true
-        }
-        return correct;
-    }
+    private fun signIn() {
+        val msg = verifyFields()
+        if (msg.isEmpty()) {
 
-    private fun signIn(){
-        if(notEmpty()){
-            if(verifyIdenticalPassword()){
-                if(verifySizePassword()){
-                    val userEmail = edtEmail.text.toString().trim()
-                    val userPassword = edtPassword.text.toString().trim()
+            val userEmail = edtEmail.text.toString().trim()
+            val userPassword = edtPassword.text.toString().trim()
 
-                    firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword).addOnCompleteListener{task ->
-                        if(task.isSuccessful){
-                            sendEmailVerification()
-                            Toast.makeText(this, "Usuário criado com sucesso. Verifique sua caixa de e-mail", Toast.LENGTH_SHORT).show();
-                            finish()
-                        }else{
-                            val exception = task.exception;
-                            if(exception is FirebaseAuthException && exception.errorCode == "ERROR_EMAIL_ALREADY_IN_USE"){
-                                Toast.makeText(this, "Email já cadastrado.", Toast.LENGTH_SHORT).show();
-                            }else if(exception is FirebaseAuthException && exception.errorCode == "ERROR_WEAK_PASSWORD"){
-                                Toast.makeText(this, "Senha fraca.", Toast.LENGTH_SHORT).show();
-                            }else{
-                                Toast.makeText(this, "Erro ao criar usuário.", Toast.LENGTH_SHORT).show();
-                            }
+            firebaseAuth.createUserWithEmailAndPassword(userEmail, userPassword)
+                .addOnCompleteListener { task ->
+                    if (task.isSuccessful) {
+                        sendEmailVerification()
+                        Toast.makeText(this, R.string.user_created_success, Toast.LENGTH_SHORT).show()
+                        finish()
+                    } else {
+                        val exception = task.exception;
+                        if (exception is FirebaseAuthException && exception.errorCode == "ERROR_EMAIL_ALREADY_IN_USE") {
+                            Toast.makeText(this, R.string.email_registered, Toast.LENGTH_SHORT).show()
+                        } else {
+                            Toast.makeText(this, R.string.erro_create_user, Toast.LENGTH_SHORT).show()
                         }
-
                     }
-                }else{
-                    Toast.makeText(this, "As senhas são iguais mas de tamanho inadequado.", Toast.LENGTH_SHORT).show();
                 }
-            }else{
-                Toast.makeText(this, "As senhas não coincidem.", Toast.LENGTH_SHORT).show();
-            }
-        }else{
-            Toast.makeText(this, "Preencha todos os campos.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -165,7 +149,7 @@ class CreateAccount : AppCompatActivity() {
         firebaseUser?.let {
             it.sendEmailVerification().addOnCompleteListener { task ->
                 if(task.isSuccessful){
-                    Toast.makeText(this, "E-mail enviado com sucesso", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.email_success_sent, Toast.LENGTH_SHORT).show();
                 }
             }
         }

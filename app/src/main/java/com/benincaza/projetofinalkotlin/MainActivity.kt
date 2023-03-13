@@ -1,8 +1,6 @@
 package com.benincaza.projetofinalkotlin
 
-import android.content.Context
 import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.SparseBooleanArray
@@ -15,14 +13,10 @@ import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.FirebaseUser
-import com.google.gson.Gson
-import com.google.gson.reflect.TypeToken
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var sharedPreferences: SharedPreferences
-    private var gson = Gson()
-    private val NAME_LIST = "lista_de_compras"
+    private val PRODUCTS = "produtos"
     lateinit var mGoogleSignClient: GoogleSignInClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +27,8 @@ class MainActivity : AppCompatActivity() {
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
             .requestIdToken(getString(R.string.default_web_client_id))
             .requestEmail()
-            .build();
+            .build()
+
         mGoogleSignClient = GoogleSignIn.getClient(this, gso)
 
         val firebaseAuth: FirebaseAuth = FirebaseAuth.getInstance()
@@ -45,41 +40,43 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
-        sharedPreferences = getSharedPreferences(NAME_LIST, Context.MODE_PRIVATE)
-
         val listViewTasks = findViewById<ListView>(R.id.listViewTasks)
-        val createTask = findViewById<EditText>(R.id.createTask)
+        val edtProduct = findViewById<EditText>(R.id.edt_product)
 
-        val itemList = getData()
+        val itemList = ListaComprasPreferences(this).getString(PRODUCTS)
         val adapter = ArrayAdapter(this, android.R.layout.simple_list_item_multiple_choice, itemList)
 
+        listViewTasks.adapter = adapter
+        adapter.notifyDataSetChanged()
+
         findViewById<View>(R.id.btn_add).setOnClickListener {
-            itemList.add(createTask.text.toString());
-            listViewTasks.adapter = adapter;
+            itemList.add(edtProduct.text.toString());
+            listViewTasks.adapter = adapter
             adapter.notifyDataSetChanged()
 
-            createTask.text.clear()
+            ListaComprasPreferences(this).storeString(PRODUCTS, itemList)
+            edtProduct.text.clear()
         }
 
         findViewById<View>(R.id.btn_delete).setOnClickListener {
-            val position: SparseBooleanArray = listViewTasks.checkedItemPositions;
-            val count = listViewTasks.count;
-            var item = count - 1;
+            val position: SparseBooleanArray = listViewTasks.checkedItemPositions
+            val count = listViewTasks.count
+            var item = count - 1
             while(item >= 0){
                 if(position.get(item)){
                     adapter.remove(itemList.get(item))
                 }
-                item--;
+                item--
             }
 
-            saveData(itemList)
-            position.clear();
+            ListaComprasPreferences(this).storeString(PRODUCTS, itemList)
+            position.clear()
             adapter.notifyDataSetChanged()
         }
 
         findViewById<View>(R.id.btn_clear).setOnClickListener {
             itemList.clear()
-            saveData(itemList)
+            ListaComprasPreferences(this).storeString(PRODUCTS, itemList)
             adapter.notifyDataSetChanged()
         }
 
@@ -89,21 +86,5 @@ class MainActivity : AppCompatActivity() {
 
             startActivity(Intent(this, LoginScreen::class.java))
         }
-    }
-
-    private fun getData(): ArrayList<String> {
-        val arrayJson = sharedPreferences.getString("lista", null)
-        return if(arrayJson.isNullOrEmpty()){
-            arrayListOf()
-        }else{
-            gson.fromJson(arrayJson, object: TypeToken<ArrayList<String>>(){}.type)
-        }
-    }
-
-    private fun saveData(array: ArrayList<String>){
-        val arrayJson = gson.toJson(array)
-        val editor = sharedPreferences.edit()
-        editor.putString("lista", arrayJson)
-        editor.apply();
     }
 }

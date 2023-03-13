@@ -73,13 +73,13 @@ class LoginScreen : AppCompatActivity() {
     private fun handleResult(completedTask: Task<GoogleSignInAccount>){
         try{
             val account: GoogleSignInAccount? = completedTask.getResult(ApiException::class.java);
-            Toast.makeText(this, "Logado com sucesso", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show()
             if(account != null){
                 UpdateUser(account)
             }
         }catch (e: ApiException){
             println(e)
-            Toast.makeText(this, "Falha ao logar", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.login_failed, Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -107,20 +107,20 @@ class LoginScreen : AppCompatActivity() {
                     val firebaseUser: FirebaseUser? = firebaseAuth.currentUser
                     if(firebaseUser != null && firebaseUser.isEmailVerified()){
                         startActivity(Intent(this, MainActivity::class.java))
-                        Toast.makeText(this, "Logado com sucesso", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.login_success, Toast.LENGTH_SHORT).show()
                         finish()
                     }else if(firebaseUser != null && !firebaseUser.isEmailVerified()){
                         firebaseAuth.signOut()
-                        Toast.makeText(this, "Verifique seu email", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.check_your_email, Toast.LENGTH_SHORT).show()
                     }else{
-                        Toast.makeText(this, "Falha ao logar", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, R.string.login_failed, Toast.LENGTH_SHORT).show()
                     }
                 }else{
-                    Toast.makeText(this, "Falha ao logar", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, R.string.login_failed, Toast.LENGTH_SHORT).show()
                 }
             }
         }else{
-            Toast.makeText(this, "Preencha todos os campos", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, R.string.fill_all_fields, Toast.LENGTH_SHORT).show()
         }
     }
 }
