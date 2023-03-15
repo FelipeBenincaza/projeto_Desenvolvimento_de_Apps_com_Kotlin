@@ -10,7 +10,7 @@ A aplicação possui as páginas de login, registro e cadastro de produtos. <br>
 - Na tela de cadastro de produtos é permitido a entrada de produtos para adicionar na lista de compras. Além das opções de limpar a lista toda e selecionar os produtos e exclui-los. <br>
 
 ## Tecnologias utilizadas
-Projeto desenvolvido em Kotlin, utilizando Firebase para a autenticação para efetuar o login no app.
+Projeto desenvolvido em Kotlin, utilizando Firebase para a autenticação para efetuar o login no app e do SharedPreferences para salvar a lista.
 
 ## Status do projeto
 Em desenvolvimento
